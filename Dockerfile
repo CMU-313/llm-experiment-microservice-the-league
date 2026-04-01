@@ -1,17 +1,23 @@
-FROM python:3.12
+FROM python:3.12-slim-bookworm
 
-# Set working directory
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
 WORKDIR /app
 
-# Copy requirements and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
+ENV FLASK_APP=app.py
+ENV PORT=8080
+ENV PATH="/app/.venv/bin:$PATH"
 
-# Copy the rest of the app
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-group dev
+
 COPY . .
 
-# Expose the port Flask runs on
-EXPOSE 5000
+EXPOSE 8080
 
-# Run the Flask app
-CMD ["flask", "run", "--host=0.0.0.0"]
+# Ollama must be reachable at OLLAMA_HOST (e.g. http://host.docker.internal:11434 or http://ollama:11434).
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "2", "--threads", "4", "app:app"]

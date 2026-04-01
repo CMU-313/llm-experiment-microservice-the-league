@@ -1,0 +1,23 @@
+[project]
+name = "translator-service"
+version = "0.1.0"
+description = "LLM translation microservice (Ollama) for NodeBB integration"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "flask==3.0.0",
+    "gunicorn==22.0.0",
+    "ollama==0.6.1",
+    "pydantic>=2.9.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==7.4.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
