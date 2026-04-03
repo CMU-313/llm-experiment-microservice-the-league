@@ -19,14 +19,13 @@ This project includes a DevContainer configuration for a consistent development 
 
 ## Step 2: Installing Dependencies
 
-This project uses [UV](https://github.com/astral-sh/uv) for fast Python package management.
+This project uses [uv](https://docs.astral.sh/uv/) for Python package management.
 
 ```bash
-uv init                             # Creates virtual environment
-uv add -r requirements.txt # Installs dependencies from requirements.txt
+uv sync --group dev    # Creates .venv and installs runtime + dev (pytest) deps from uv.lock
 ```
 
-Note: UV will automatically create a virtual environment in `.venv` and install the dependencies. You don't need to manually activate the virtual environment if you use `uv run` for the commands below.
+To refresh the lockfile after editing `pyproject.toml`, run `uv lock`. You do not need to activate `.venv` if you use `uv run` for the commands below.
 
 ## Step 3: Run tests locally
 ```bash
